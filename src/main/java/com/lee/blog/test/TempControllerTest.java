@@ -26,6 +26,6 @@ public class TempControllerTest {
         // prefix: /WEB-INF/views/
         // suffix: .jsp
         // 전체경로: /WEB-INF/views//test.jsp.jsp
-        return "test";
+        return null;
     }
 }
