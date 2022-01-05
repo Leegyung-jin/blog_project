@@ -5,6 +5,11 @@ let index = {
         $("#btn-save").on("click", () => {
             this.save();
         });
+        /*
+        $("#btn-login").on("click", () => {
+            this.login();
+        });
+        */
     },
 
     save: function() {
@@ -21,7 +26,7 @@ let index = {
         // ajax통신을 이용해서 3개의 파라미터를 json으로 변경하여 insert 요청한다.
         $.ajax({
             type: "POST",
-            url: "/blog/api/user",
+            url: "/auth/joinProc",
             data: JSON.stringify(data),  // http body데이터 / java script Object 를 바로 받아들일 수 없기 때문에 JSON문자열로 변환해준다.
             contentType: "application/json; charset=utf-8", // body 데이터가 어떤 타입인지(MIME)
             dataType: "json"
@@ -30,12 +35,35 @@ let index = {
         }).done(function(resp){
             alert("회원 가입이 완료되었습니다.");
             console.log(resp)
-            location.href="/blog"
+            location.href="/"
         }).fail(function(error){
             alert(JSON.stringify(error));
 
         });
+    },
+
+    /*
+    전통적인 로그인 방식 > 사용하지 않음
+    login: function() {
+        let data = {
+            username: $("#username").val(),
+            password: $("#password").val(),
+        };
+
+        $.ajax({
+            type: "POST",
+            url: "/api/user/login",
+            data: JSON.stringify(data),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json"
+        }).done(function(resp){
+            alert("로그인이 완료되었습니다.");
+            location.href="/"
+        }).fail(function(error){
+            alert(JSON.stringify(error));
+        });
     }
+    */
 }
 
 index.init();
