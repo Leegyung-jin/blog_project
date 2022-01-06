@@ -26,6 +26,8 @@ public class UserApiController {
         return new ResponseDto<Integer>(HttpStatus.OK.value(), 1);  // 자바 오브젝트를 JSON으로 변환해서 리턴한다.
     }
 
+    // 로그인 작성하지 않는 이유:  Security Config에서 가로챌 것
+
 
 
     /*
