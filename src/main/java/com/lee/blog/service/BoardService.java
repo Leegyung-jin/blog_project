@@ -3,7 +3,10 @@ package com.lee.blog.service;
 import com.lee.blog.model.Board;
 import com.lee.blog.model.User;
 import com.lee.blog.repository.BoardRepository;
+import org.hibernate.boot.model.naming.IllegalIdentifierException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,7 +27,20 @@ public class BoardService {
     }
 
     @Transactional
-    public List<Board> 글목록(){
-        return boardRepository.findAll();
+    public Page<Board> 글목록(Pageable pageable){
+        return boardRepository.findAll(pageable);
+    }
+
+    public Board 글상세보기(int id) {
+        return boardRepository.findById(id)
+            .orElseThrow(()-> { // option을 리턴한다.
+                return new IllegalIdentifierException("글 상세보기 실패: 아이디를 찾을 수 없습니다.");
+            });
+    }
+
+    @Transactional
+    public void 삭제하기(int id) {
+        System.out.println("샂게=====" + id);
+        boardRepository.deleteById(id);
     }
 }
