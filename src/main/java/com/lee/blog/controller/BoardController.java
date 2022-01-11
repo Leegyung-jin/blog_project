@@ -33,6 +33,12 @@ public class BoardController {
         return "board/detail";
     }
 
+    @GetMapping("/board/{id}/updateForm")
+    public String updateForm(@PathVariable int id, Model model){    // model: 해당 데이터로 view까지 이동하는 것
+        model.addAttribute("board", boardService.글상세보기(id));
+        return "board/updateForm";
+    }
+
     // User권한이 필요하다
     @GetMapping("/board/saveForm")
     public String saveForm(){

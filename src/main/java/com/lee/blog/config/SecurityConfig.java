@@ -4,6 +4,7 @@ import com.lee.blog.config.auth.PrincipalDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -20,6 +21,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private PrincipalDetailService principalDetailService;
 
+    @Bean
+    @Override
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
+    }
+
     @Bean   // 함수가 리턴하는 값을 스프링이 관리하며 IoC가 된다.
     public BCryptPasswordEncoder encodePWD(){
         return new BCryptPasswordEncoder();
@@ -31,8 +38,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(principalDetailService).passwordEncoder(encodePWD());   // 이걸 넣지 않으면 패스워드 비교할 수 없음
     }
-
-
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
