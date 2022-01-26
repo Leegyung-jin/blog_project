@@ -1,5 +1,6 @@
 package com.lee.blog.model;
 
+import com.lee.blog.dto.ReplySaveRequestDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -23,7 +24,6 @@ public class Reply {
     @Column(nullable = false, length = 200)
     private String content;
 
-
     @ManyToOne
     @JoinColumn(name="boardId")
     private Board board;
@@ -34,4 +34,10 @@ public class Reply {
 
     @CreationTimestamp
     private Timestamp createDate;
+
+//    public void update(User user, Board board, String content) {
+//        setUser(user);
+//        setBoard(board);
+//        setContent(content);
+//    }
 }

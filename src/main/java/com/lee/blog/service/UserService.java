@@ -27,7 +27,7 @@ public class UserService {
 
     @Transactional
     public void 회원가입(User user) {
-        String rawPassword = user.getPassword();    // 1234 원문
+        String rawPassword = user.getPassword();            // 1234 원문
         String encPassword = encoder.encode(rawPassword);   // 해쉬
         user.setPassword(encPassword);
         user.setRole(RoleType.USER);
@@ -41,14 +41,27 @@ public class UserService {
         User persistance = userRepository.findById(user.getId()).orElseThrow(()->{
             return new IllegalIdentifierException("해당 회원을 찾을 수 없습니다.");
         });
-        String rawPassword = user.getPassword();
-        String encPassword = encoder.encode(rawPassword);
-        persistance.setPassword(encPassword);
-        persistance.setEmail(user.getEmail());
+
+        // Oauth 값에 따라 비밀번호와 이메일을 변경할 수 있도록 Validate를 체크한다.
+        if(persistance.getOauth() == null || persistance.getOauth().equals("")) {
+            String rawPassword = user.getPassword();
+            String encPassword = encoder.encode(rawPassword);
+            persistance.setPassword(encPassword);
+            persistance.setEmail(user.getEmail());
+        }
 
         userRepository.save(persistance);
         // 수정 함수 종료 = 서비스 종료 = 트랜잭션 종료 = 자동 commit
         // 영속화된 persistance 객체의 변화가 감지되면 더티체킹이되어 변화된 것들을 자동으로 DB에 update하여 저장한다.
+    }
+
+    @Transactional(readOnly = true)
+    public User 회원찾기(String username) {
+
+        User user = userRepository.findByUsername(username).orElseGet(()->{
+            return new User();
+        });
+        return user;
     }
 
 

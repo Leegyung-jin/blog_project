@@ -1,5 +1,6 @@
 package com.lee.blog.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -36,7 +37,9 @@ public class Board {
     private User user;  // DB는 오브젝트를 저장할 수 없다. FK, 자바는 오브젝트를 저장할 수 있다.
 
     @OneToMany(mappedBy = "board", fetch = FetchType.EAGER)  // mappedBy: 연관관계의 주인이 아니다(FK가 아님 > DB에 컬럼을 만들지 않는다.) 기본 패치 전략->EAGER
-    private List<Reply> reply;
+    @JsonIgnoreProperties({"board", "user"})    // board는 다시 호출하지 않는다. Board를 direct로 호출했을 때에는 호출이 된다.
+    @OrderBy("id desc") // ID 값 기준으로 내림차순 정렬
+    private List<Reply> replys;
 
     @CreationTimestamp  // 데이터가 insert, update 될 때 값이 전송된다.
     private Timestamp createDate;

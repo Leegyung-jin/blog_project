@@ -38,6 +38,8 @@ public class User {
     @Enumerated(EnumType.STRING)
     private RoleType role;    // Enum을 쓰는게 좋다. ADMIN, USER 타입이 강제가 된다.
 
+    private String oauth;   // kakao, google, email 등 로그인 방식을 구별한다.
+
     @CreationTimestamp  // 시간이 자동 입력된다.
     private Timestamp createDate;
 

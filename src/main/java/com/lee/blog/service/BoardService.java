@@ -1,8 +1,12 @@
 package com.lee.blog.service;
 
+import com.lee.blog.dto.ReplySaveRequestDto;
 import com.lee.blog.model.Board;
+import com.lee.blog.model.Reply;
 import com.lee.blog.model.User;
 import com.lee.blog.repository.BoardRepository;
+import com.lee.blog.repository.ReplyRepository;
+import com.lee.blog.repository.UserRepository;
 import org.hibernate.boot.model.naming.IllegalIdentifierException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -18,6 +22,12 @@ public class BoardService {
 
     @Autowired
     private BoardRepository boardRepository;
+
+    @Autowired
+    private ReplyRepository replyRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Transactional
     public void 글쓰기(Board board, User user) {  // title, content만 받는다.
@@ -53,5 +63,38 @@ public class BoardService {
         board.setTitle(requestBoard.getTitle());
         board.setContent(requestBoard.getContent());
         // 해당 함수 종료 시(Service가 종료) 트랜잭션이 종료된다. 이 때 더티체킹을 진행한다.(영속화된 데이터(board)가 달라졌기 때문 > 자동 업데이트된다.)
+    }
+
+    @Transactional
+//    public void 댓글작성(User user, int boardId, Reply requestReply){
+    public void 댓글작성(ReplySaveRequestDto replySaveRequestDto){
+
+        System.out.println("********************");
+        System.out.println("********************");
+        System.out.println(replySaveRequestDto);
+        System.out.println("********************");
+        System.out.println("********************");
+
+        User user = userRepository.findById(replySaveRequestDto.getUserId()).orElseThrow(()-> {
+            return new IllegalIdentifierException("댓글 작성 실패: User ID를 찾을 수 없습니다.");
+        });
+
+        Board board = boardRepository.findById(replySaveRequestDto.getBoardId()).orElseThrow(()-> {
+            return new IllegalIdentifierException("댓글 작성 실패: 게시글 ID를 찾을 수 없습니다.");
+        });
+
+        Reply reply = Reply.builder()
+                .user(user)
+                .board(board)
+                .content(replySaveRequestDto.getContent())
+                .build();
+
+//        requestReply.setUser(user);
+//        requestReply.setBoard(board);
+
+//        Reply reply = new Reply();
+//        reply.update(user, board, replySaveRequestDto.getContent());
+
+        replyRepository.save(reply);
     }
 }
