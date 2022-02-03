@@ -7,6 +7,7 @@ import com.lee.blog.model.User;
 import com.lee.blog.repository.BoardRepository;
 import com.lee.blog.repository.ReplyRepository;
 import com.lee.blog.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.hibernate.boot.model.naming.IllegalIdentifierException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -18,16 +19,21 @@ import java.util.List;
 
 
 @Service
+@RequiredArgsConstructor
 public class BoardService {
 
-    @Autowired
-    private BoardRepository boardRepository;
+    // Autowired 없이 @RequiredArgsConstructor와 아래의 코드를 이용하여 간단하게 표현할 수 있다.
+    private final BoardRepository boardRepository;
+    private final ReplyRepository replyRepository;
 
-    @Autowired
-    private ReplyRepository replyRepository;
-
-    @Autowired
-    private UserRepository userRepository;
+//    @Autowired
+//    private BoardRepository boardRepository;
+//
+//    @Autowired
+//    private ReplyRepository replyRepository;
+//
+//    @Autowired
+//    private UserRepository userRepository;
 
     @Transactional
     public void 글쓰기(Board board, User user) {  // title, content만 받는다.
@@ -69,25 +75,20 @@ public class BoardService {
 //    public void 댓글작성(User user, int boardId, Reply requestReply){
     public void 댓글작성(ReplySaveRequestDto replySaveRequestDto){
 
-        System.out.println("********************");
-        System.out.println("********************");
-        System.out.println(replySaveRequestDto);
-        System.out.println("********************");
-        System.out.println("********************");
 
-        User user = userRepository.findById(replySaveRequestDto.getUserId()).orElseThrow(()-> {
-            return new IllegalIdentifierException("댓글 작성 실패: User ID를 찾을 수 없습니다.");
-        });
+//        User user = userRepository.findById(replySaveRequestDto.getUserId()).orElseThrow(()-> {
+//            return new IllegalIdentifierException("댓글 작성 실패: User ID를 찾을 수 없습니다.");
+//        });
+//
+//        Board board = boardRepository.findById(replySaveRequestDto.getBoardId()).orElseThrow(()-> {
+//            return new IllegalIdentifierException("댓글 작성 실패: 게시글 ID를 찾을 수 없습니다.");
+//        });
 
-        Board board = boardRepository.findById(replySaveRequestDto.getBoardId()).orElseThrow(()-> {
-            return new IllegalIdentifierException("댓글 작성 실패: 게시글 ID를 찾을 수 없습니다.");
-        });
-
-        Reply reply = Reply.builder()
-                .user(user)
-                .board(board)
-                .content(replySaveRequestDto.getContent())
-                .build();
+//        Reply reply = Reply.builder()
+//                .user(user)
+//                .board(board)
+//                .content(replySaveRequestDto.getContent())
+//                .build();
 
 //        requestReply.setUser(user);
 //        requestReply.setBoard(board);
@@ -95,6 +96,8 @@ public class BoardService {
 //        Reply reply = new Reply();
 //        reply.update(user, board, replySaveRequestDto.getContent());
 
-        replyRepository.save(reply);
+//        replyRepository.save(reply);
+        int result = replyRepository.mSave(replySaveRequestDto.getUserId(), replySaveRequestDto.getBoardId(), replySaveRequestDto.getContent());
+        System.out.println("BoardService: " + result);
     }
 }
