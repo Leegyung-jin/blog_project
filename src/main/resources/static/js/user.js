@@ -24,25 +24,25 @@ let index = {
             email: $("#email").val()
         };
 
-        // console.log(data);   // 값 들어오는지 확인
 
         // ajax 호출 시 default는 비동기 호출
         // ajax통신을 이용해서 3개의 파라미터를 json으로 변경하여 insert 요청한다.
         $.ajax({
             type: "POST",
             url: "/auth/joinProc",
-            data: JSON.stringify(data),  // http body데이터 / java script Object 를 바로 받아들일 수 없기 때문에 JSON문자열로 변환해준다.
-            contentType: "application/json; charset=utf-8", // body 데이터가 어떤 타입인지(MIME)
-            dataType: "json"
-            // 서버로 보낸 요청에 대한 응답이 왔을 때 기본 적으로 모든 것이 String(문자열)이다.
-            // 타입을 기재했을 때 응답된 데이터의 형식이 json이라면 java script object로 변경해준다.
+            data: JSON.stringify(data), // http body데이터
+            contentType: "application/json; charset=utf-8",// body데이터가 어떤 타입인지(MIME)
+            dataType: "json" // 요청을 서버로해서 응답이 왔을 때 기본적으로 모든 것이 문자열 (생긴게 json이라면) => javascript오브젝트로 변경
         }).done(function(resp){
-            alert("회원 가입이 완료되었습니다.");
-            console.log(resp)
-            location.href="/"
+            // 같은 아이디로 가입을 시도할 때 출력
+            if(resp.status === 500){
+                alert("회원가입에 실패했습니다.");
+            }else{
+                alert("회원가입이 완료되었습니다.");
+                location.href = "/";
+            }
         }).fail(function(error){
             alert(JSON.stringify(error));
-
         });
     },
 
